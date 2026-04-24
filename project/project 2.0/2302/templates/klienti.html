@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="lv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Klienti</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    {% include "_header.html" %}
+    <main class="page-wrap">
+        <div class="page-head">
+            <h1>Klientu datubāze</h1>
+        </div>
+        <div class="form-card table-wrap">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Vārds</th>
+                        <th>Uzvārds</th>
+                        <th>Personas kods</th>
+                        <th>Telefons</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for klients in klienti %}
+                        <tr>
+                            <td>{{ klients.vards }}</td>
+                            <td>{{ klients.uzvards }}</td>
+                            <td>{{ klients.personas_kods }}</td>
+                            <td>{{ klients.telefons }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </main>
+    {% include "_footer.html" %}
+</body>
+</html>

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="lv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pievienot pasūtījumu</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    {% include "_header.html" %}
+    <main class="page-wrap">
+        <div class="page-head">
+            <h1>Pievienot pasūtījumu</h1>
+        </div>
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <ul class="message-list">
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+        {% endwith %}
+        <form action="/pievienot_pasutijumu" method="post" class="order-layout">
+            <div class="form-card order-left">
+                <label for="klients_id">Klients</label>
+                <select id="klients_id" name="klients_id" required>
+                    <option value="">Izvēlieties klientu</option>
+                    {% for klients in klienti %}
+                        <option value="{{ klients.id }}">{{ klients.vards }} {{ klients.uzvards }}</option>
+                    {% endfor %}
+                </select>
+                <div id="order-items"></div>
+                <button type="button" id="add-item-btn">Pievienot grāmatu</button>
+            </div>
+            <div class="form-card order-right">
+                <div class="order-check-title">Pasūtījuma čeks</div>
+                <div class="order-check-line">Preču skaits: <strong id="check-count">0</strong></div>
+                <div class="order-check-line">Kopējā cena: <strong id="check-price">0.00 EUR</strong></div>
+                <button type="submit" class="buy-btn">Pievienot pasūtījumu</button>
+            </div>
+        </form>
+    </main>
+    {% include "_footer.html" %}
+
+    <script>
+        const gramatas = [
+            {% for g in gramatas %}
+                {id: {{ g.id }}, nosaukums: "{{ g.nosaukums|replace('"', '\\"') }}", cena: {{ g.cena or 0 }}},
+            {% endfor %}
+        ];
+
+        function createItemRow() {
+            const wrapper = document.createElement("div");
+            wrapper.className = "order-row";
+            const select = document.createElement("select");
+            select.name = "gramata_id";
+            select.required = true;
+            const start = document.createElement("option");
+            start.value = "";
+            start.textContent = "Izvēlieties grāmatu";
+            select.appendChild(start);
+            gramatas.forEach(g => {
+                const opt = document.createElement("option");
+                opt.value = g.id;
+                opt.textContent = g.nosaukums + " (" + Number(g.cena).toFixed(2) + " EUR)";
+                select.appendChild(opt);
+            });
+            const qty = document.createElement("input");
+            qty.type = "number";
+            qty.name = "daudzums";
+            qty.min = "1";
+            qty.value = "1";
+            qty.required = true;
+            const remove = document.createElement("button");
+            remove.type = "button";
+            remove.textContent = "Noņemt";
+            remove.className = "remove-btn";
+            remove.addEventListener("click", () => {
+                wrapper.remove();
+                updateCheck();
+            });
+            select.addEventListener("change", updateCheck);
+            qty.addEventListener("input", updateCheck);
+            wrapper.appendChild(select);
+            wrapper.appendChild(qty);
+            wrapper.appendChild(remove);
+            return wrapper;
+        }
+
+        function updateCheck() {
+            const rows = document.querySelectorAll(".order-row");
+            let count = 0;
+            let total = 0;
+            rows.forEach(row => {
+                const gid = row.querySelector("select").value;
+                const qty = Number(row.querySelector("input").value || 0);
+                const found = gramatas.find(g => String(g.id) === String(gid));
+                if (found && qty > 0) {
+                    count += qty;
+                    total += qty * Number(found.cena);
+                }
+            });
+            document.getElementById("check-count").textContent = count;
+            document.getElementById("check-price").textContent = total.toFixed(2) + " EUR";
+        }
+
+        document.getElementById("add-item-btn").addEventListener("click", () => {
+            document.getElementById("order-items").appendChild(createItemRow());
+            updateCheck();
+        });
+
+        document.getElementById("order-items").appendChild(createItemRow());
+        updateCheck();
+    </script>
+</body>
+</html>

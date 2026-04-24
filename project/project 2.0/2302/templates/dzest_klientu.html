@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="lv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dzēst klientu</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    {% include "_header.html" %}
+    <main class="page-wrap">
+        <div class="page-head">
+            <h1>Dzēst klientu</h1>
+        </div>
+        <form action="/dzest_klientu" method="post" class="form-card">
+            <label for="klients_id">Izvēlieties klientu</label>
+            <select id="klients_id" name="klients_id" required>
+                {% for klients in klienti %}
+                    <option value="{{ klients.id }}">{{ klients.vards }} {{ klients.uzvards }}</option>
+                {% endfor %}
+            </select>
+            <button type="submit">Dzēst</button>
+        </form>
+    </main>
+    {% include "_footer.html" %}
+</body>
+</html>

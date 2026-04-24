@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="lv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pievienot klientu</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    {% include "_header.html" %}
+    <main class="page-wrap">
+    <div class="page-head">
+        <h1>Pievienot klientu</h1>
+    </div>
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+        <ul class="message-list">
+            {% for message in messages %}
+                <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+    {% endwith %}
+    <form action="/pievienot_klientu" method="post" class="form-card">
+        <label for="vards">Vārds</label>
+        <input type="text" id="vards" name="vards" required>
+        
+        <label for="uzvards">Uzvārds</label>
+        <input type="text" id="uzvards" name="uzvards" required>
+
+        <label for="personas_kods">Personas kods</label>
+        <input type="text" id="personas_kods" name="personas_kods" required>
+        
+        <label for="telefons">Telefona numurs</label>
+        <input type="text" id="telefons" name="telefons" required>
+        
+        <button type="submit">Pievienot</button>
+    </form>
+    </main>
+    {% include "_footer.html" %}
+</body>
+</html>

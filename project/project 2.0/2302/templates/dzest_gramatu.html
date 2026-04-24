@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="lv">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Dzēst grāmatu</title>
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    {% include "_header.html" %}
+    <main class="page-wrap">
+        <div class="page-head">
+            <h1>Dzēst grāmatu</h1>
+        </div>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <ul class="message-list">
+                {% for category, message in messages %}
+                    {% if category == "error" %}
+                        <li>{{ message }}</li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+        {% endif %}
+        {% endwith %}
+        <form action="/dzest_gramatu" method="post" class="form-card">
+            <label for="gramata">Izvēlieties grāmatu</label>
+            <select id="gramata" name="gramata_id" required>
+                {% for gramata in gramatas %}
+                    <option value="{{ gramata.id }}">{{ gramata.nosaukums }}</option>
+                {% endfor %}
+            </select>
+            <button type="submit">Dzēst</button>
+        </form>
+    </main>
+    {% include "_footer.html" %}
+</body>
+</html>

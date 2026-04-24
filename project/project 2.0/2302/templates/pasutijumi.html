@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="lv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pasūtījumi</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    {% include "_header.html" %}
+    <main class="page-wrap">
+        <div class="page-head">
+            <h1>Pasūtījumi</h1>
+        </div>
+        <div class="form-card table-wrap">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Datums</th>
+                        <th>Pasūtījuma elementi</th>
+                        <th>Klients</th>
+                        <th>Cena</th>
+                        <th>Preču skaits</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for pasutijums in pasutijumi %}
+                        <tr>
+                            <td>{{ pasutijums.laiks }}</td>
+                            <td>{{ pasutijums.elementi }}</td>
+                            <td>{{ pasutijums.vards }} {{ pasutijums.uzvards }}</td>
+                            <td>{{ "%.2f"|format(pasutijums.cena_kopa) }} EUR</td>
+                            <td>{{ pasutijums.preccu_skaits }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </main>
+    {% include "_footer.html" %}
+</body>
+</html>

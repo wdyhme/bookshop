@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="lv">
+<head>
+    <meta charset="UTF-8">
+    <title>Kategorijas</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    {% include "_header.html" %}
+    <main class="page-wrap">
+        <div class="page-head">
+            <h1>Kategoriju saraksts</h1>
+        </div>
+        <div class="form-card">
+            <ul class="list-clean">
+                {% for kategorija in kategorijas %}
+                    <li><a href="/gramatas?kategorija_id={{ kategorija.id }}">{{ kategorija.nosaukums }}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
+    </main>
+    {% include "_footer.html" %}
+</body>
+</html>

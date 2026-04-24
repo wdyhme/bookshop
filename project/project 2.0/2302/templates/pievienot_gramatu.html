@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="lv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pievienot grāmatu</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    {% include "_header.html" %}
+    <main class="page-wrap">
+        <div class="page-head">
+            <h1>Pievienot grāmatu</h1>
+        </div>
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <ul class="message-list">
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+        {% endwith %}
+        <form action="/pievienot_gramatu" method="post" enctype="multipart/form-data" class="form-card">
+            <label for="nosaukums">Grāmatas nosaukums</label>
+            <input type="text" id="nosaukums" name="nosaukums" required>
+            <label for="kategorija_id">Kategorija</label>
+            <select id="kategorija_id" name="kategorija_id" required>
+                <option value="">Izvēlieties kategoriju</option>
+                {% for kategorija in kategorijas %}
+                    <option value="{{ kategorija.id }}">{{ kategorija.nosaukums }}</option>
+                {% endfor %}
+            </select>
+            <label for="cena">Cena</label>
+            <input type="number" id="cena" name="cena" step="0.01" required>
+            <label for="pieejama">Pieejamība</label>
+            <select id="pieejama" name="pieejama" required>
+                <option value="1">Ir noliktavā</option>
+                <option value="0">Nav noliktavā</option>
+            </select>
+            <label for="autors_id">Autors</label>
+            <select id="autors_id" name="autors_id" required>
+                <option value="">Izvēlieties autoru</option>
+                {% for autors in autori %}
+                    <option value="{{ autors.id }}">{{ autors.vards }}</option>
+                {% endfor %}
+            </select>
+            <label for="attels">Attēls</label>
+            <input type="file" id="attels" name="attels" accept="image/*" required>
+            <button type="submit">Saglabāt</button>
+        </form>
+    </main>
+    {% include "_footer.html" %}
+</body>
+</html>

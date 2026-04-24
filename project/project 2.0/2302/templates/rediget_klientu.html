@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="lv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+    <title>Rediģēt klientu</title>
+    <script>
+        function showClientInfo() {
+            let klientsId = document.getElementById("klients").value;
+            window.location.href = "/rediget_klientu?klients_id=" + klientsId;
+        }
+
+        function enableEditing() {
+            document.getElementById("vards").disabled = false;
+            document.getElementById("uzvards").disabled = false;
+            document.getElementById("personas_kods").disabled = false;
+            document.getElementById("telefons").disabled = false;
+            document.getElementById("saglabat").style.display = "inline";
+            document.getElementById("atcelt").style.display = "inline";
+            document.getElementById("rediget").style.display = "none";
+        }
+
+        function disableEditing() {
+            document.getElementById("vards").disabled = true;
+            document.getElementById("uzvards").disabled = true;
+            document.getElementById("personas_kods").disabled = true;
+            document.getElementById("telefons").disabled = true;
+            document.getElementById("saglabat").style.display = "none";
+            document.getElementById("atcelt").style.display = "none";
+            document.getElementById("rediget").style.display = "inline";
+        }
+    </script>
+</head>
+<body>
+    {% include "_header.html" %}
+    <main class="page-wrap">
+    <div class="page-head">
+        <h1>Rediģēt klientu</h1>
+    </div>
+
+    <div class="form-card">
+        <label for="klients">Izvēlieties klientu</label>
+        <select id="klients" name="klients" onchange="showClientInfo()">
+            <option value="">Izvēlieties klientu</option>
+            {% for klients in klienti %}
+                <option value="{{ klients.id }}" {% if request.args.get("klients_id")|int == klients.id %}selected{% endif %}>
+                    {{ klients.vards }} {{ klients.uzvards }}
+                </option>
+            {% endfor %}
+        </select>
+    </div>
+
+    {% if klients %}
+    <form action="/saglabat_klientu" method="post" class="form-card">
+        <input type="hidden" name="klients_id" value="{{ klients.id }}">
+        
+        <label for="vards">Vārds</label>
+        <input type="text" id="vards" name="vards" value="{{ klients.vards }}" disabled><br>
+
+        <label for="uzvards">Uzvārds</label>
+        <input type="text" id="uzvards" name="uzvards" value="{{ klients.uzvards }}" disabled><br>
+
+        <label for="personas_kods">Personas kods</label>
+        <input type="text" id="personas_kods" name="personas_kods" value="{{ klients.personas_kods }}" disabled><br>
+
+        <label for="telefons">Telefona numurs</label>
+        <input type="text" id="telefons" name="telefons" value="{{ klients.telefons }}" disabled><br>
+
+        <button type="button" id="rediget" onclick="enableEditing()">Rediģēt</button>
+        <button type="submit" id="saglabat" style="display:none;">Saglabāt</button>
+        <button type="button" id="atcelt" onclick="disableEditing()" style="display:none;">Beigt rediģēšanu bez saglabāšanas</button>
+    </form>
+    {% endif %}
+    </main>
+    {% include "_footer.html" %}
+</body>
+</html>

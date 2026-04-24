@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="lv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+    <title>Grāmatas</title>
+</head>
+<body>
+    {% include "_header.html" %}
+    <main class="page-wrap">
+        <div class="page-head">
+            <h1>Katalogs</h1>
+            <p>Atrodiet sev piemērotāko grāmatu</p>
+        </div>
+
+        <form method="get" action="/gramatas" class="filters-panel">
+            <div class="filter-item">
+                <label for="autors_id">Autors</label>
+                <select id="autors_id" name="autors_id">
+                    <option value="">Visi autori</option>
+                    {% for autors in autori %}
+                        <option value="{{ autors.id }}" {% if selected_autors == autors.id|string %}selected{% endif %}>{{ autors.vards }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="filter-item">
+                <label for="kategorija_id">Žanrs</label>
+                <select id="kategorija_id" name="kategorija_id">
+                    <option value="">Visi žanri</option>
+                    {% for kategorija in kategorijas %}
+                        <option value="{{ kategorija.id }}" {% if selected_kategorija == kategorija.id|string %}selected{% endif %}>{{ kategorija.nosaukums }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="filter-item">
+                <label for="max_cena">Cena līdz</label>
+                <input type="number" id="max_cena" name="max_cena" step="0.01" value="{{ selected_cena }}">
+            </div>
+            <button type="submit" class="btn-dark">Filtrēt</button>
+        </form>
+
+        {% if gramatas %}
+            <div class="books-grid">
+                {% for gramata in gramatas %}
+                    <div class="book-card">
+                        <div class="book-image-wrap">
+                            <img src="{{ url_for('image_file', filename=gramata.attels) }}" alt="{{ gramata.nosaukums }}" class="book-image">
+                        </div>
+                        <div class="book-author">{{ gramata.autors }}</div>
+                        <div class="book-title">{{ gramata.nosaukums }}</div>
+                        <div class="book-price">{{ "%.2f"|format(gramata.cena) }} EUR</div>
+                        <button type="button" class="buy-btn">Pirkt</button>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="empty-state">
+                <div class="empty-icon">📚</div>
+                <div class="empty-title">Rezultāti netika atrasti</div>
+                <div class="empty-subtitle">Pamēģiniet mainīt filtrus</div>
+            </div>
+        {% endif %}
+    </main>
+    {% include "_footer.html" %}
+</body>
+</html>
